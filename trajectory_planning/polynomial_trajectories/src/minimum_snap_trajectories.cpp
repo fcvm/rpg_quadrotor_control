@@ -4,6 +4,9 @@
 
 #include "polynomial_trajectories/polynomial_trajectories_common.h"
 
+#include <gurobi_c++.h>
+//#include <gurobi_c.h>
+
 namespace polynomial_trajectories {
 
 namespace minimum_snap_trajectories {
@@ -1242,6 +1245,8 @@ PolynomialTrajectorySettings ensureFeasibleTrajectorySettings(
   return new_trajectory_settings;
 }
 
+
+
 Eigen::VectorXd solveQuadraticProgram(const Eigen::MatrixXd& H,
                                       const Eigen::VectorXd& f,
                                       const Eigen::MatrixXd& A_eq,
@@ -1265,6 +1270,71 @@ Eigen::VectorXd solveQuadraticProgram(const Eigen::MatrixXd& H,
   *objective_value = solution.transpose() * H * solution + f.dot(solution);
 
   return solution;
+
+
+
+  ///////////////////
+  //////////////////
+  //////////////////
+
+
+  /*
+  GRBEnv env = GRBEnv();
+  GRBModel model = GRBModel(env);
+
+  // Create variables
+  int DecVarsN = H.rows();
+  GRBVar* DecVars = model.addVars(DecVarsN, GRB_CONTINUOUS);
+
+
+  
+  // Set objective
+  GRBQuadExpr Obj = 0;
+  for (int i = 0; i < DecVarsN; i++)
+  {
+    Obj += f[i] * *(DecVars +i);
+    for (int j = 0; j < DecVarsN; j++)
+    {
+      Obj += *(DecVars +i) * H.row(i)[j] * *(DecVars +j);
+    }
+  }
+  model.setObjective(Obj);
+
+
+  // Set equality constraints
+  int EquConstrN = A_eq.rows();
+  GRBLinExpr RHS = 0;
+  GRBLinExpr LHS = 0;
+  for (int i = 0; i < EquConstrN; i++)
+  {
+    RHS = b_eq[i];
+    for (int j = 0; j < DecVarsN; j++)
+    {
+      LHS += A_eq.row(i)[j] * *(DecVars +j);
+    }
+  }
+  model.addConstr(LHS, GRB_EQUAL, RHS);
+
+  std::cout << "\n\n++++++TEST_A+++++++\n\n";
+  // Optimize model
+  model.optimize();
+
+
+  *objective_value = model.get(GRB_DoubleAttr_ObjVal);
+
+
+  Eigen::VectorXd Solution = Eigen::VectorXd::Zero(DecVarsN);
+  for (int i = 0; i < DecVarsN; i++)
+  {
+    Solution[i] == (DecVars + i)->get(GRB_DoubleAttr_X);
+  }
+
+  std::cout << "\n\n++++++TEST_B+++++++\n\n";
+  std::cout << *objective_value <<std::endl << Solution;
+
+  return Solution;
+  */
+
 }
 
 }  // namespace implementation

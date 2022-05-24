@@ -14,4 +14,17 @@ PolynomialTrajectory::PolynomialTrajectory()
 
 PolynomialTrajectory::~PolynomialTrajectory() {}
 
+
+PolynomialTrajectory::PolynomialTrajectory(const PolynomialTrajectory& other)
+:
+trajectory_type(other.trajectory_type),
+coeff(other.coeff),
+T(other.T),
+start_state(other.start_state),
+end_state(other.end_state),
+number_of_segments(other.number_of_segments),
+segment_times(other.segment_times),
+optimization_cost(other.optimization_cost)
+{}
+
 }  // namespace polynomial_trajectories

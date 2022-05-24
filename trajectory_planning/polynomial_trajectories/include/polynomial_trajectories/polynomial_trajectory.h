@@ -32,6 +32,8 @@ struct PolynomialTrajectory {
   int number_of_segments;
   Eigen::VectorXd segment_times;
   double optimization_cost;
+
+  PolynomialTrajectory(const PolynomialTrajectory& other);
 };
 
 }  // namespace polynomial_trajectories
