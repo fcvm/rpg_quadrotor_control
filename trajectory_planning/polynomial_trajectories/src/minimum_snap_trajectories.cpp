@@ -4,8 +4,6 @@
 
 #include "polynomial_trajectories/polynomial_trajectories_common.h"
 
-#include <gurobi_c++.h>
-//#include <gurobi_c.h>
 
 namespace polynomial_trajectories {
 
